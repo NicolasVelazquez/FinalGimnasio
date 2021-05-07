@@ -1,18 +1,36 @@
-// import MemberMongo from "../../models/member.model.js"
-// import mongoose from "mongoose"
+import MemberMongo from "../../models/member.model.js"
+import PaymentMongo from "../../models/payment.model.js"
+import CommonsUtil from "../../utils/commons.util.js"
 
 export default class PaymentController {
 
     static async create(req, res) {
-      if(req.body.memberIdExist){
-        if(!req.body.memberActive){
-          res.json("Pago realizado con éxito.")
-        } else {
-          res.json("El socio ya ha realizado un pago actualmente vigente.")
-        }
-      } else {
-        res.json("El socio no existe.")
+
+      const memberEmail = req.body.email
+      const member = await MemberMongo.findOne({ email: memberEmail })
+      
+      if(!member){
+        res.json("No existe un socio con el email: " + memberEmail)
+        return
       }
-    }
+      if(member.activePayment && new Date(member.activePayment.end).getTime() >= Date.now()){
+        res.json("El socio ya ha realizado un pago actualmente vigente.")
+        return
+      }
     
+      const newPayment = new PaymentMongo({
+        type: req.body.subscriptionType,
+        start: Date.now(),
+        end: await CommonsUtil.getDateFromSubscriptionType(req.body.subscriptionType)
+      })
+
+      newPayment.save()
+        .catch(err => res.status(500).json('Error: ' + err))
+
+      member.activePayment = newPayment
+
+      member.save()
+              .then(() => res.json("Pago realizado con éxito."))
+              .catch(err => res.status(500).json('Error: ' + err))
+    }
 }

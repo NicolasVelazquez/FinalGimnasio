@@ -1,5 +1,5 @@
 import MemberMongo from "../../models/member.model.js"
-import Utils from "../../utils/members.utils.js"
+import Utils from "../../utils/members.util.js"
 import mongoose from "mongoose"
 
 export default class MembersController {

@@ -14,16 +14,21 @@ export default class ClassController {
     static async enroll(req, res) {
       const memberEmail = req.body.email
       const member = await MemberMongo.findOne({ email: req.body.email })
-      // let classEntity = ClassMongo.findOne({ name: req.body.className })
+      const classEntity = await ClassMongo.findOne({ name: req.body.className })
+      
       if(member){
-        if(new Date(member.activePayment.end).getTime() >= Date.now()){
-          member.classesEnrolled.push(req.body.className)
+        if(classEntity){
+          if(new Date(member.activePayment.end).getTime() >= Date.now()){
+            member.classesEnrolled.push(req.body.className)
 
-          member.save()
-            .then(() => res.json('¡Socio inscripto a la clase con éxito!'))
-            .catch(err => res.status(500).json('Error: ' + err))
+            member.save()
+              .then(() => res.json('¡Socio inscripto a la clase con éxito!'))
+              .catch(err => res.status(500).json('Error: ' + err))
+          } else {
+            res.json(`El socio con el email: ${memberEmail} no ha realizado el pago de la cuota.`)
+          }
         } else {
-          res.json(`El socio con el email: ${memberEmail} no ha realizado el pago de la cuota.`)
+          res.json("La clase especificada no existe.")
         }
       } else {
         res.json("No existe un socio con el email: " + memberEmail)
