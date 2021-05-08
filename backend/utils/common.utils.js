@@ -1,6 +1,6 @@
 import moment from 'moment'
 
-export default class PaymentController {
+export default class CommonUtils {
     
     static getDateFromSubscriptionType(subscriptionType){
         let now = moment().hours(23).minutes(59);

@@ -14,6 +14,8 @@ const paymentSchema = new Schema({
     collection: 'payments'
 });
 
+paymentSchema.index({ memberId: 1 }, { unique: true })
+
 const payments = mongoose.model('Payments', paymentSchema);
 
 export default payments

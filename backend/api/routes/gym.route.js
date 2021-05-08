@@ -18,7 +18,10 @@ router
 router.route("/clases/inscripcion").post(ClassController.enroll)
 router.route("/clases/baja").post(ClassController.dropOut)
 
-router.route("/abonos").post(PaymentController.create)
+router
+    .route("/abonos")
+    .get(PaymentController.find)
+    .post(PaymentController.create)
 
 router
     .route("/socios")
