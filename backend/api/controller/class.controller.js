@@ -1,6 +1,6 @@
 import ClassMongo from "../../models/class.model.js"
 import MemberMongo from "../../models/member.model.js"
-// import mongoose from "mongoose"
+import mongoose from "mongoose"
 
 export default class ClassController {
 
@@ -57,5 +57,59 @@ export default class ClassController {
         res.json("No existe un socio con el email: " + memberEmail)
       }
     }
+
+    static async findById(req, res) {
+      try {
+        const classEntity = await ClassMongo.findById(req.params.id).lean();
+        if (!classEntity) {
+          res.status(404).json('Error: Clase no encontrada.')
+        } else {
+          res.json(classEntity);
+        }
+        
+      } catch (error) {
+        console.log(error.message);
+        if (error instanceof mongoose.CastError) {
+          res.status(400).json('Error: Id de la clase inválido.')
+        }
+      }
+    }
     
+    static async create(req, res) {
+      const newClass = new ClassMongo(req.body)
+      newClass.save()
+        .then(() => res.json('¡Clase guardada!'))
+        .catch(err => res.status(400).json('Error: ' + err))
+    }
+
+    static async update(req, res) {
+      try {
+        const result = await ClassMongo.findByIdAndUpdate(req.params.id, req.body, { new: true })
+        // const classEntity = await ClassMongo.findById(req.params.id);
+        if (!result) {
+          res.status(404).json('Error: Clase no encontrada.')
+        }
+        res.json('Clase actualizada!')
+      } catch (error) {
+        console.log(error.message);
+        if (error instanceof mongoose.CastError) {
+          res.status(400).json('Error: Id de clase inválida.')
+        }
+      }
+    }
+    
+    static async delete(req, res) {
+      try {
+        const result = await ClassMongo.findByIdAndDelete(req.params.id)
+        if (!result) {
+          res.status(404).json('Error: Clase no encontrada.')
+        }
+        res.json('Clase borrada.')
+      } catch (error) {
+        console.log(error.message);
+        if (error instanceof mongoose.CastError) {
+          res.status(400).json('Error: Id de clase inválida.')
+        }
+      }
+    }
 }
