@@ -2,13 +2,7 @@ import moment from 'moment'
 
 export default class PaymentController {
     
-    static async addDays(days){
-        let addedDate = new Date(Date.now());
-        addedDate.setDate(addedDate.getDate() + days);
-        return addedDate
-    }
-
-    static async getDateFromSubscriptionType(subscriptionType){
+    static getDateFromSubscriptionType(subscriptionType){
         let now = moment().hours(23).minutes(59);
         switch (subscriptionType) {
             case "diario":
@@ -32,6 +26,6 @@ export default class PaymentController {
             default:
                 break
         }
-        return now.tz()
+        return now.format()
     }
 }

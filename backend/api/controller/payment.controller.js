@@ -1,5 +1,7 @@
+import moment from "moment"
 import MemberMongo from "../../models/member.model.js"
 import PaymentMongo from "../../models/payment.model.js"
+import PlanMongo from "../../models/plan.model.js"
 import CommonsUtil from "../../utils/commons.util.js"
 
 export default class PaymentController {
@@ -17,11 +19,18 @@ export default class PaymentController {
         res.json("El socio ya ha realizado un pago actualmente vigente.")
         return
       }
-    
+      const plan = PlanMongo.findOne({ name: req.body.subscriptionType})
+      if(plan){
+        res.json("El plan solicitado no existe.")
+        return
+      }
+
       const newPayment = new PaymentMongo({
+        memberId : member._id,
         type: req.body.subscriptionType,
-        start: Date.now(),
-        end: await CommonsUtil.getDateFromSubscriptionType(req.body.subscriptionType)
+        price : plan.price,
+        start: moment().format(),
+        end: CommonsUtil.getDateFromSubscriptionType(req.body.subscriptionType)
       })
 
       newPayment.save()
@@ -30,7 +39,7 @@ export default class PaymentController {
       member.activePayment = newPayment
 
       member.save()
-              .then(() => res.json("Pago realizado con éxito."))
-              .catch(err => res.status(500).json('Error: ' + err))
+        .then(() => res.json("Pago realizado con éxito."))
+        .catch(err => res.status(500).json('Error: ' + err))
     }
 }

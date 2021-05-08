@@ -5,11 +5,20 @@ import PaymentController from "../controller/payment.controller.js"
 
 const router = express.Router()
 
-router.route("/clases").get(ClassController.find)
+router
+    .route("/clases")
+    .get(ClassController.find)
+    .post(ClassController.create)
+router
+    .route("/clases/:id")
+    .get(ClassController.findById)
+    .put(ClassController.update)
+    .delete(ClassController.delete)
+
 router.route("/clases/inscripcion").post(ClassController.enroll)
 router.route("/clases/baja").post(ClassController.dropOut)
 
-router.route("/socios/pagos").post(PaymentController.create)
+router.route("/abonos").post(PaymentController.create)
 
 router
     .route("/socios")
