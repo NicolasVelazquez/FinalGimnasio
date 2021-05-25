@@ -14,8 +14,8 @@ class MemberDataService {
         return http.post("/socios", data);
     }
 
-    updateMember(id, data) {
-        return http.put(`/socios/${id}`, data);
+    updateMember(data) {
+        return http.put(`/socios/${data.id}`, data);
     }
 
     deleteMember(id) {

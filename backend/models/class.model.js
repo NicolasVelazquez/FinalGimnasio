@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 
 const classSchema = new Schema({
   name: { type: String, required: true },
-  schedule: { type: Map, of: String, required: true }
+  schedule: { type: [String], required: true }
 }, {
   collection: 'classes'
 });

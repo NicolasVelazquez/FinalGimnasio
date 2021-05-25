@@ -2,18 +2,19 @@ import React from "react";
 import { Switch, Route, Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-import Gym from "./components/gym"
+import Members from "./components/members"
+import AddMember from "./components/add-member"
 
 function App() {
-  const [user, setUser] = React.useState(null);
+  // const [user, setUser] = React.useState(null);
 
-  async function login(user = null) {
-    setUser(user);
-  }
+  // async function login(user = null) {
+  //   setUser(user);
+  // }
 
-  async function logout() {
-    setUser(null)
-  }
+  // async function logout() {
+  //   setUser(null)
+  // }
 
   return (
     <div className="App">
@@ -23,46 +24,27 @@ function App() {
         </a>
         <div className="navbar-nav mr-auto">
           <li className="nav-item">
-            <Link to={"/gimnasio"} className="nav-link">
-              Gimnasio
+            <Link to={"/socios"} className="nav-link">
+              Socios
             </Link>
           </li>
-          <li className="nav-item" >
-            { user ? (
-              <a onClick={logout} className="nav-link" style={{cursor:'pointer'}}>
-                Logout {user.name}
-              </a>
-            ) : (            
-            <Link to={"/login"} className="nav-link">
-              Login
+          <li className="nav-item">
+            <Link to={"/abonos"} className="nav-link">
+              Abonos
             </Link>
-            )}
-
+          </li>
+          <li className="nav-item">
+            <Link to={"/clases"} className="nav-link">
+              Clases
+            </Link>
           </li>
         </div>
       </nav>
 
       <div className="container mt-3">
         <Switch>
-          <Route exact path={["/", "/gimnasio"]} component={Gym} />
-          <Route 
-            path="/gimnasio/:id/review"
-            render={(props) => (
-              <Gym {...props} user={user} />
-            )}
-          />
-          <Route 
-            path="/gimnasio/:id"
-            render={(props) => (
-              <Gym {...props} user={user} />
-            )}
-          />
-          <Route 
-            path="/login"
-            render={(props) => (
-              <Gym {...props} login={login} />
-            )}
-          />
+          <Route exact path={["/socios"]} component={Members} />
+          <Route exact path={["/socios/crear"]} component={AddMember} />
         </Switch>
       </div>
     </div>

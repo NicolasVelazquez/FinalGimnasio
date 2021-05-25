@@ -21,7 +21,7 @@ export default class PaymentController {
       return
     }
     const plan = PlanMongo.findOne({ name: req.body.subscriptionType})
-    if(plan){
+    if(!plan){
       res.status(404).json("El plan solicitado no existe.")
       return
     }

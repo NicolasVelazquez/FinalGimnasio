@@ -7,7 +7,10 @@ export default class MembersController {
     static async find(req, res) {
       MemberMongo.find()
         .lean()
-        .then(members => res.json(members))
+        .then(members => res.json(members.map(function(member) {
+          member.active = (member.activePayment && new Date(member.activePayment.end).getTime() >= Date.now())
+          return member
+        })))
         .catch(err => res.status(400).json('Error: ' + err))
     }
 
