@@ -1,7 +1,8 @@
 export default class MemberUtils {
 
     static async populateMember(member, data) {
-        member.membername = data.membername;
+        member.name = data.name;
+        member.lastName = data.lastName
         member.age = data.age;
         member.email = data.email;
         member.genre = data.genre;

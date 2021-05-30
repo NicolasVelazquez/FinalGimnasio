@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react"
 import MembersDataService from "../services/member.service"
-import { Switch, Route, Link } from "react-router-dom";
-import AddMember from "./add-member"
+import { Link, useRouteMatch } from "react-router-dom";
+// import AddMember from "./add-member"
 
-const Members = props => {
+export default function Members(props) {
   const [classes, setClasses] = useState([]);
+  let match = useRouteMatch();
 
   useEffect(() => {
     retrieveMembers();
@@ -25,7 +26,7 @@ const Members = props => {
     <div>
       <div className="row pb-1">
         <div>
-          <Link to={"/socios/crear"} className="btn btn-primary col-lg-4 mx-1 mb-1">
+          <Link to={`${match.url}/crear`} className="btn btn-primary col-lg-4 mx-1 mb-1">
             Alta de socio
           </Link>
         </div>
@@ -68,14 +69,14 @@ const Members = props => {
           );
         })}
       </div>
-      <div className="container mt-3">
+      {/* <div className="container mt-3">
         <Switch>
-          <Route exact path={["/socios/crear"]} component={AddMember} />
+          <Route exact path={`${match.url}/crear`} component={AddMember} />
         </Switch>
-      </div>
+      </div> */}
     </div>
   
   );
 }
 
-export default Members;
+// export default Members;

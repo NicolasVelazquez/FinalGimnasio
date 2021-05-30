@@ -14,17 +14,22 @@ const AddMember = props => {
 
   const [member, setMember] = useState(initialMemberState);
   const [submitted, setSubmitted] = useState(false);
+  
+  const [name, setName] = useState(null)
+  const [lastName, setLastName] = useState(null)
+  const [age, setAge] = useState(null)
+  const [email, setEmail] = useState(null)
 
-  const handleInputChange = event => {
-    setMember(event.target.value);
-  };
+  // const handleInputChange = event => {
+  //   setMember(event.target.value);
+  // };
 
   const saveMember = () => {
     var data = {
-      text: member,
-      name: props.user.name,
-      user_id: props.user.id,
-      restaurant_id: props.match.params.id
+      name: name,
+      lastName: lastName,
+      age: age,
+      email: email
     };
 
     if (editing) {
@@ -62,15 +67,41 @@ const AddMember = props => {
         ) : (
           <div>
             <div className="form-group">
-              <label htmlFor="description">{ editing ? "Editar" : "Crear" } Member</label>
+              <label htmlFor="description">{ editing ? "Editar" : "Crear" } Socio</label>
               <input
                 type="text"
                 className="form-control"
-                id="text"
+                // id="text"
                 required
-                value={member}
-                onChange={handleInputChange}
-                name="text"
+                value={member.name}
+                onChange={(e) => setName(e.target.value)}
+                // onChange={handleInputChange}
+                // name="text"
+                placeholder='Nombre'
+              />
+              <input
+                type="text"
+                className="form-control"
+                required
+                value={member.lastName}
+                onChange={(e) => setLastName(e.target.value)}
+                placeholder='Apellido'
+              />
+              <input
+                type="text"
+                className="form-control"
+                required
+                value={member.age}
+                onChange={(e) => setAge(e.target.value)}
+                placeholder='Edad'
+              />
+              <input
+                type="text"
+                className="form-control"
+                required
+                value={member.email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder='E-mail'
               />
             </div>
             <button onClick={saveMember} className="btn btn-success">

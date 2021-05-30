@@ -43,8 +43,8 @@ function App() {
 
       <div className="container mt-3">
         <Switch>
-          <Route exact path={["/socios"]} component={Members} />
           <Route exact path={["/socios/crear"]} component={AddMember} />
+          <Route exact path={["/socios"]} component={Members} />
         </Switch>
       </div>
     </div>
