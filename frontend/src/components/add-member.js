@@ -9,16 +9,16 @@ const AddMember = props => {
 
   if (props.location.state && props.location.state.currentMember) {
     editing = true;
-    initialMemberState = props.location.state.currentMember.text
+    initialMemberState = props.location.state.currentMember
   }
 
-  const [member, setMember] = useState(initialMemberState);
+  const [member] = useState(initialMemberState);
   const [submitted, setSubmitted] = useState(false);
   
-  const [name, setName] = useState(null)
-  const [lastName, setLastName] = useState(null)
-  const [age, setAge] = useState(null)
-  const [email, setEmail] = useState(null)
+  const [name, setName] = useState(initialMemberState.name)
+  const [lastName, setLastName] = useState(initialMemberState.lastName)
+  const [age, setAge] = useState(initialMemberState.age)
+  const [email, setEmail] = useState(initialMemberState.email)
 
   // const handleInputChange = event => {
   //   setMember(event.target.value);
@@ -33,6 +33,7 @@ const AddMember = props => {
     };
 
     if (editing) {
+      console.log(initialMemberState)
       data._id = props.location.state.currentMember._id
       MembersDataService.updateMember(data)
         .then(response => {
@@ -56,24 +57,30 @@ const AddMember = props => {
   };
 
   return (
-      <div className="submit-form">
+      <div className="submit-form" >
         {submitted ? (
-          <div>
-            <h4>¡Guardado exitoso!</h4>
-            <Link to={"/socios"} className="btn btn-success">
-              Atrás
-            </Link>
+          <div  style={{textAlign: " -webkit-center"}} >
+            <div className="col-lg-4 pb-1">
+              <div className="card">
+                <div className="card-body">
+                  <h4>¡Socio guardado con éxito!</h4>
+                  <Link to={"/socios"} className="btn btn-success">
+                    Atrás
+                  </Link>
+                </div>
+              </div>
+            </div>
           </div>
         ) : (
-          <div>
+          <div className="card-body">
             <div className="form-group">
-              <label htmlFor="description">{ editing ? "Editar" : "Crear" } Socio</label>
+              <h4 htmlFor="description">{ editing ? "Editar" : "Crear" } Socio</h4>
               <input
                 type="text"
                 className="form-control"
                 // id="text"
                 required
-                value={member.name}
+                defaultValue={member.name}
                 onChange={(e) => setName(e.target.value)}
                 // onChange={handleInputChange}
                 // name="text"
@@ -83,23 +90,25 @@ const AddMember = props => {
                 type="text"
                 className="form-control"
                 required
-                value={member.lastName}
+                defaultValue={member.lastName}
                 onChange={(e) => setLastName(e.target.value)}
                 placeholder='Apellido'
               />
               <input
-                type="text"
+                type="number"
+                min="0"
+                max="100"
                 className="form-control"
-                required
-                value={member.age}
+                required="true"
+                defaultValue={member.age}
                 onChange={(e) => setAge(e.target.value)}
                 placeholder='Edad'
               />
               <input
-                type="text"
+                type="email"
                 className="form-control"
                 required
-                value={member.email}
+                defaultValue={member.email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder='E-mail'
               />

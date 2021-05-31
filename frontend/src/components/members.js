@@ -56,9 +56,17 @@ export default function Members(props) {
                     </ul> : <p>Aún no se ha inscripto a una clase.</p>}
                   </div>
                   <div className="row">
-                    <Link to={"/socios/editar/" + memberItem._id} className="btn btn-primary col-lg-5 mx-1 mb-1">
+                    <Link to={{
+                        pathname: match.url + "/editar/" + memberItem._id,
+                        state: {
+                          currentMember: memberItem
+                        }
+                      }} className="btn btn-primary col-lg-5 mx-1 mb-1">
                       Editar
                     </Link>
+                    {/* <Link to={"/socios/editar/" + memberItem._id} className="btn btn-primary col-lg-5 mx-1 mb-1">
+                      Editar
+                    </Link> */}
                     <Link to={"/socios/eliminar/" + memberItem._id} className="btn btn-primary col-lg-5 mx-1 mb-1">
                       Eliminar
                     </Link>

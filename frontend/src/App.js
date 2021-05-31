@@ -43,6 +43,7 @@ function App() {
 
       <div className="container mt-3">
         <Switch>
+          <Route path="/socios/editar/:id" render={(props) => (<AddMember {...props} />)}/>
           <Route exact path={["/socios/crear"]} component={AddMember} />
           <Route exact path={["/socios"]} component={Members} />
         </Switch>
