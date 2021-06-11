@@ -116,6 +116,9 @@ const AddMember = props => {
             <button onClick={saveMember} className="btn btn-success">
               Submit
             </button>
+            <Link to={"/socios"} className="btn btn-primary" style={{margin: 10}}>
+              Atrás
+            </Link>
           </div>
         )}
       </div>
