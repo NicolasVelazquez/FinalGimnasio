@@ -4,7 +4,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 import Members from "./components/members"
 import AddMember from "./components/add-member"
-import ModalExample from "./components/modal-example"
+import Payments from "./components/payments"
+import AddPayments from "./components/add-payment"
 
 function App() {
   // const [user, setUser] = React.useState(null);
@@ -47,7 +48,8 @@ function App() {
           <Route path="/socios/:id/editar" render={(props) => (<AddMember {...props} />)}/>
           <Route exact path={["/socios/crear"]} component={AddMember} />
           <Route exact path={["/socios"]} component={Members} />
-          <Route exact path={["/abonos"]} component={ModalExample} />
+          <Route exact path={["/abonos/crear"]} component={AddPayments} />
+          <Route exact path={["/abonos"]} component={Payments} />
         </Switch>
       </div>
     </div>

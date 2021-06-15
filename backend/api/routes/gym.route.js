@@ -23,6 +23,8 @@ router
     .get(PaymentController.find)
     .post(PaymentController.create)
 
+router.route("/abonos/:id").get(PaymentController.find)
+
 router
     .route("/socios")
     .get(MembersController.find)

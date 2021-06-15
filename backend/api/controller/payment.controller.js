@@ -64,7 +64,10 @@ export default class PaymentController {
     } else {
       PaymentMongo.find()
         .lean()
-        .then(payments => res.json(payments))
+        .then(payments => res.json(payments.map(function(payment) {
+          payment.active = (new Date(payment.end).getTime() >= Date.now())
+          return payment
+        })))
         .catch(err => res.status(500).json('Error: ' + err))
     }
   }

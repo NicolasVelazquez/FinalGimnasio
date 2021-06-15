@@ -16,7 +16,7 @@ const customStyles = {
 };
 
 export default function Members(props) {
-  const [classes, setClasses] = useState([]);
+  const [members, setMembers] = useState([]);
   let match = useRouteMatch();
 
   useEffect(() => {
@@ -27,7 +27,7 @@ export default function Members(props) {
     MembersDataService.getAll()
       .then(response => {
         console.log(response.data);
-        setClasses(response.data);
+        setMembers(response.data);
       })
       .catch(e => {
         console.log(e);
@@ -73,19 +73,21 @@ export default function Members(props) {
         </div>
       </div>
       <div className="row">
-        {classes.map((memberItem, index) => {
+        {members.map((memberItem, index) => {
           return (
             <div className="col-lg-4 pb-1">
               <div className="card">
                 <div className="card-body">
                   <h5 className="card-title">{memberItem.name} {memberItem.lastName} {(memberItem.active) ? '(ACTIVO)' : '(INACTIVO)'}</h5>
                   <div className="card-text">
-                    <strong>Edad: </strong>{memberItem.age}<br />
                     <strong>Email: </strong>{memberItem.email}<br />
-                    <strong>Socio desde: </strong>{new Date(memberItem.createdAt).toLocaleString()}<br />
+                    <strong>Fecha de Nacimiento: </strong>{new Date(memberItem.birthday).toLocaleDateString()}<br />
+                    <strong>Socio desde: </strong>{new Date(memberItem.createdAt).toLocaleDateString()}<br />
+                    <strong>Género: </strong>{memberItem.genre ? memberItem.genre : '-'}<br />
+                    <strong>Teléfono: </strong>{memberItem.phonenumber ? memberItem.phonenumber : '-'}<br />
                     {(memberItem.activePayment) &&
                       <div>
-                        <strong>Vencimiento del abono: </strong> {new Date(memberItem.activePayment.end).toLocaleString()}
+                        <strong>Vencimiento del abono: </strong> {new Date(memberItem.activePayment.end).toLocaleDateString()}
                       </div>
                     }
                     <strong>Clases inscripto: </strong>

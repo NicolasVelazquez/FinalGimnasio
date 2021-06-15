@@ -20,6 +20,7 @@ export default class MembersController {
         if (!member) {
           res.status(404).json('Error: Socio no encontrado.')
         } else {
+          member.active = (member.activePayment && new Date(member.activePayment.end).getTime() >= Date.now())
           res.json(member);
         }
         
