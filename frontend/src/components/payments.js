@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useCallback } from "react"
+import React, { useState, useEffect } from "react"
 import PaymentsDataService from "../services/payment.service"
 import MembersDataService from "../services/member.service"
-import { Link, useRouteMatch } from "react-router-dom";
-import { VictoryPie, VictoryLabel } from "victory";
+import { Link, useRouteMatch } from "react-router-dom"
+import { VictoryPie, VictoryLabel } from "victory"
 
 export default function Payments(props) {
   const [payments, setPayments] = useState([]);
@@ -54,88 +54,110 @@ export default function Payments(props) {
       });
   };
 
-  const retrievePie = () => {
-    return (
-      <svg viewBox="0 0 400 400">
-        <VictoryPie
-          colorScale={["tomato"]}
-          standalone={false}
-          width={400} height={400}
-          data={[
-            { x: 1, y: 1 }
-          ]}
-          innerRadius={120} labelRadius={100}
-          style={{ labels: { fontSize: 0, fill: "white" } }}
-        />
-        <VictoryLabel
-          textAnchor="middle"
-          style={{ fontSize: 40 }}
-          x={200} y={200}
-          text="55"
-        />
-      </svg>
-    );
+  class CircleCounter extends React.Component {
+    render() {
+      return (
+        <div className="row" style={{ textAlign: "center" }}>
+          <div className="col">
+            <label>Socios Activos</label>
+            <svg viewBox="0 0 800 200">
+              <VictoryPie
+                colorScale={["#8BC34A"]}
+                standalone={false}
+                width={800} height={200}
+                innerRadius={75} labelRadius={100} radius={80}
+                style={{ labels: { fontSize: 0, fill: "white" } }}
+              />
+              <VictoryLabel
+                textAnchor="middle"
+                style={{ fontSize: 30 }}
+                x={400} y={100}
+                text={countActive}
+              />
+            </svg>
+          </div>
+          <div className="col">
+            <label>Socios Inactivos</label>
+            <svg viewBox="0 0 800 200">
+              <VictoryPie
+                colorScale={["tomato"]}
+                standalone={false}
+                width={800} height={200}
+                innerRadius={75} labelRadius={100} radius={80}
+                style={{ labels: { fontSize: 0, fill: "white" } }}
+              />
+              <VictoryLabel
+                textAnchor="middle"
+                style={{ fontSize: 30 }}
+                x={400} y={100}
+                text={countInactive}
+              />
+            </svg>
+          </div>
+        </div>
+      );
+    }
   }
 
   return (
     <div>
       <div className="row">
         <div className="col-lg-12 pb-4" style={{ textAlign: "right" }}>
-          <Link to={`${match.url}/crear`} className="btn btn-primary col-lg-4">
-            Alta de abono
+          {/* <Link to={`${match.url}/crear`} className="btn btn-primary col-lg-4">
+            Alta Abono
+          </Link> */}
+          <Link to={{
+            pathname: match.url + "/crear",
+            state: {
+              memberList: members
+            }
+          }} className="btn btn-primary col-lg-4">
+            Alta Abono
           </Link>
         </div>
       </div>
-      <div className="row">
-        <svg viewBox="0 0 400 200">
-          <VictoryPie
-            colorScale={["tomato"]}
-            standalone={false}
-            width={200} height={200}
-            innerRadius={18} labelRadius={100} radius={20}
-            style={{ labels: { fontSize: 0, fill: "white" } }}
-          />
-          <VictoryLabel
-            textAnchor="middle"
-            style={{ fontSize: 10 }}
-            x={100} y={100}
-            text={countInactive}
-          />
-          <VictoryPie
-            colorScale={["#8BC34A"]}
-            standalone={false}
-            width={400} height={200}
-            innerRadius={18} labelRadius={100} radius={20}
-            style={{ labels: { fontSize: 0, fill: "white" } }}
-          />
-          <VictoryLabel
-            textAnchor="middle"
-            style={{ fontSize: 10 }}
-            x={200} y={100}
-            text={countActive}
-          />
-        </svg>
-      </div>
-      <div className="row">
-        {payments.map((paymentItem, memberId) => {
-          return (
-            <div className="col-lg-4 pb-1">
-              <div className="card">
-                <div className="card-body">
-                  <div className="card-text">
-                    <strong>Id Socio: </strong>{paymentItem.memberId}<br />
-                    <strong>Tipo: </strong>{paymentItem.type}<br />
-                    <strong>Monto: </strong>{paymentItem.price}<br />
-                    <strong>Fecha de Inicio: </strong>{new Date(paymentItem.start).toLocaleDateString()}<br />
-                    <strong>Fecha de Fin: </strong>{new Date(paymentItem.end).toLocaleDateString()}<br />
-                  </div>
+      <CircleCounter />
+      <br />
+      <h2>Registro de Pagos</h2>
+      <div className="table-responsive">
+        <table class="table table-striped table-sm">
+          <thead>
+            <tr>
+              <th>Id Socio</th>
+              <th>Tipo</th>
+              <th>Monto</th>
+              <th>Fecha Inicio</th>
+              <th>Fecha Fin</th>
+            </tr>
+          </thead>
+          <tbody>
+            {payments.map((paymentItem, memberId) => {
+              return (
+                <tr>
+                  <td>{paymentItem.memberId}</td>
+                  <td>{paymentItem.type}</td>
+                  <td>{paymentItem.price}</td>
+                  <td>{new Date(paymentItem.start).toLocaleDateString()}</td>
+                  <td>{new Date(paymentItem.end).toLocaleDateString()}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+          {/* <div className="col-lg-4 pb-1">
+            <div className="card">
+              <div className="card-body">
+                <div className="card-text">
+                  <strong>Id Socio: </strong>{paymentItem.memberId}<br />
+                  <strong>Tipo: </strong>{paymentItem.type}<br />
+                  <strong>Monto: </strong>{paymentItem.price}<br />
+                  <strong>Fecha de Inicio: </strong>{new Date(paymentItem.start).toLocaleDateString()}<br />
+                  <strong>Fecha de Fin: </strong>{new Date(paymentItem.end).toLocaleDateString()}<br />
                 </div>
               </div>
             </div>
-          );
-        })}
+          </div> */}
+        </table>
       </div>
     </div>
-
   );
 }

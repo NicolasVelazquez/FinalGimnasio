@@ -68,7 +68,7 @@ export default function Members(props) {
       <div className="row">
         <div className="col-lg-12 pb-4"  style={{textAlign: "right"}}>
           <Link to={`${match.url}/crear`} className="btn btn-primary col-lg-4">
-            Alta de socio
+            Alta Socio
           </Link>
         </div>
       </div>

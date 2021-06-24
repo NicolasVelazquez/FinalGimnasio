@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 
 const AddMember = props => {
   let initialMemberState = ""
-
   let editing = false;
 
   if (props.location.state && props.location.state.currentMember) {
@@ -55,7 +54,6 @@ const AddMember = props => {
           console.log(e);
         });
     }
-
   };
 
   return (

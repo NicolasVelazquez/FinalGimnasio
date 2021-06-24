@@ -48,7 +48,7 @@ function App() {
           <Route path="/socios/:id/editar" render={(props) => (<AddMember {...props} />)}/>
           <Route exact path={["/socios/crear"]} component={AddMember} />
           <Route exact path={["/socios"]} component={Members} />
-          <Route exact path={["/abonos/crear"]} component={AddPayments} />
+          <Route exact path={["/abonos/crear"]} render={(props) => (<AddPayments {...props} />)} />
           <Route exact path={["/abonos"]} component={Payments} />
         </Switch>
       </div>
