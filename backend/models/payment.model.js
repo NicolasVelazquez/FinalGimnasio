@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 const paymentSchema = new Schema({
     memberId: mongoose.ObjectId,
     type: { type: String, enum: 
-        ['diario', 'semanal', 'quincenal', 'mensual', 'semestral', 'anual'], 
+        ['Diario', 'Semanal', 'Quincenal', 'Mensual', 'Semestral', 'Anual'], 
         required: true },
     price: Number,
     start: String,

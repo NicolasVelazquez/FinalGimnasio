@@ -11,25 +11,25 @@ export default class PaymentController {
 
     const memberEmail = req.body.email
     const member = await MemberMongo.findOne({ email: memberEmail })
-    
-    if(!member){
+
+    if (!member) {
       res.status(404).json("No existe un socio con el email: " + memberEmail)
       return
     }
-    if(member.activePayment && new Date(member.activePayment.end).getTime() >= Date.now()){
+    if (member.activePayment && new Date(member.activePayment.end).getTime() >= Date.now()) {
       res.status(500).json("El socio ya ha realizado un pago actualmente vigente.")
       return
     }
-    const plan = PlanMongo.findOne({ name: req.body.subscriptionType})
-    if(!plan){
+    const plan = await PlanMongo.findOne({ name: req.body.subscriptionType })
+    if (!plan) {
       res.status(404).json("El plan solicitado no existe.")
       return
     }
 
     const newPayment = new PaymentMongo({
-      memberId : member._id,
+      memberId: member._id,
       type: req.body.subscriptionType,
-      price : plan.price,
+      price: plan.price,
       start: moment().format(),
       end: CommonsUtil.getDateFromSubscriptionType(req.body.subscriptionType)
     })
@@ -46,7 +46,7 @@ export default class PaymentController {
 
   static async find(req, res) {
     const memberId = req.query.member_id
-    if(memberId){
+    if (memberId) {
       try {
         const payments = await PaymentMongo.findOne({ memberId: memberId })
         if (!payments) {
@@ -54,7 +54,7 @@ export default class PaymentController {
         } else {
           res.json(payments);
         }
-        
+
       } catch (error) {
         console.log(error.message);
         if (error instanceof mongoose.CastError) {
@@ -63,8 +63,9 @@ export default class PaymentController {
       }
     } else {
       PaymentMongo.find()
+        .sort([['end', -1]])
         .lean()
-        .then(payments => res.json(payments.map(function(payment) {
+        .then(payments => res.json(payments.map(function (payment) {
           payment.active = (new Date(payment.end).getTime() >= Date.now())
           return payment
         })))

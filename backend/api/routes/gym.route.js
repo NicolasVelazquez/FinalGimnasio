@@ -2,6 +2,7 @@ import express from "express"
 import MembersController from "../controller/members.controller.js"
 import ClassController from "../controller/class.controller.js"
 import PaymentController from "../controller/payment.controller.js"
+import PlanController from "../controller/plan.controller.js"
 
 const router = express.Router()
 
@@ -17,6 +18,15 @@ router
 
 router.route("/clases/inscripcion").post(ClassController.enroll)
 router.route("/clases/baja").post(ClassController.dropOut)
+
+router
+    .route("/planes")
+    .get(PlanController.find)
+    .post(PlanController.create)
+router
+    .route("/planes/:id")
+    .put(PlanController.update)
+    .delete(PlanController.delete)
 
 router
     .route("/abonos")

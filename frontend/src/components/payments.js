@@ -36,6 +36,7 @@ export default function Payments(props) {
   const retrievePayments = () => {
     PaymentsDataService.getAll()
       .then(response => {
+        console.log(response.data)
         setPayments(response.data);
       })
       .catch(e => {
@@ -46,7 +47,6 @@ export default function Payments(props) {
   const retrieveMembers = () => {
     MembersDataService.getAll()
       .then(response => {
-        console.log(response.data)
         setMembers(response.data);
       })
       .catch(e => {
@@ -103,9 +103,6 @@ export default function Payments(props) {
     <div>
       <div className="row">
         <div className="col-lg-12 pb-4" style={{ textAlign: "right" }}>
-          {/* <Link to={`${match.url}/crear`} className="btn btn-primary col-lg-4">
-            Alta Abono
-          </Link> */}
           <Link to={{
             pathname: match.url + "/crear",
             state: {
@@ -120,7 +117,7 @@ export default function Payments(props) {
       <br />
       <h2>Registro de Pagos</h2>
       <div className="table-responsive">
-        <table class="table table-striped table-sm">
+        <table className="table table-striped table-sm">
           <thead>
             <tr>
               <th>Id Socio</th>
@@ -133,10 +130,10 @@ export default function Payments(props) {
           <tbody>
             {payments.map((paymentItem, memberId) => {
               return (
-                <tr>
+                <tr key={paymentItem.memberId}>
                   <td>{paymentItem.memberId}</td>
                   <td>{paymentItem.type}</td>
-                  <td>{paymentItem.price}</td>
+                  <td>$ {paymentItem.price}</td>
                   <td>{new Date(paymentItem.start).toLocaleDateString()}</td>
                   <td>{new Date(paymentItem.end).toLocaleDateString()}</td>
                 </tr>

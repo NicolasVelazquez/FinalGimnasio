@@ -6,7 +6,8 @@ const planSchema = new Schema({
     type: { type: String, enum: 
         ['diario', 'semanal', 'quincenal', 'mensual', 'semestral', 'anual'], 
         required: true },
-    price: Number
+    price: Number,
+    days: Number
 }, {
     collection: 'plans'
 });
