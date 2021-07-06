@@ -28,13 +28,14 @@ export default class PaymentController {
 
     const newPayment = new PaymentMongo({
       memberId: member._id,
+      memberEmail: member.email,
       type: req.body.subscriptionType,
       price: plan.price,
       start: moment().format(),
       end: CommonsUtil.getDateFromSubscriptionType(req.body.subscriptionType)
     })
 
-    newPayment.save()
+    await newPayment.save()
       .catch(err => res.status(500).json('Error: ' + err))
 
     member.activePayment = newPayment
@@ -70,6 +71,26 @@ export default class PaymentController {
           return payment
         })))
         .catch(err => res.status(500).json('Error: ' + err))
+    }
+  }
+
+  static async delete(req, res) {
+    try {
+      const payment = await PaymentMongo.findById(req.params.id).lean();
+      if (!payment) {
+        res.status(404).json('Error: Abono no encontrado.')
+      } else {
+
+        await MemberMongo.updateOne({ "activePayment._id": payment._id }, { activePayment: null });
+        PaymentMongo.findByIdAndDelete(req.params.id)
+          .then(() => res.json('Abono borrado.'))
+          .catch(err => res.status(500).json('Error: ' + err))
+      }
+    } catch (error) {
+      console.log(error.message);
+      if (error instanceof mongoose.CastError) {
+        res.status(400).json('Error: Id de abono inválido.')
+      }
     }
   }
 }

@@ -66,7 +66,6 @@ export default class MembersController {
         if (!member) {
           res.status(404).json('Error: Socio no encontrado.')
         } else {
-          Utils.populateMember(member, req.body)
           MemberMongo.findByIdAndDelete(req.params.id)
             .then(() => res.json('Socio borrado.'))
             .catch(err => res.status(500).json('Error: ' + err))

@@ -10,6 +10,10 @@ class PaymentDataService {
         return http.get(`/abonos/${id}`);
     }
 
+    delete(id) {
+        return http.delete(`/abonos/${id}`);
+    }
+
     createPayment(data) {
         return http.post("/abonos", data);
     }

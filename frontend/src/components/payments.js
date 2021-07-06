@@ -3,12 +3,14 @@ import PaymentsDataService from "../services/payment.service"
 import MembersDataService from "../services/member.service"
 import { Link, useRouteMatch } from "react-router-dom"
 import { VictoryPie, VictoryLabel } from "victory"
+import ModalContainer from "./modal-example"
 
 export default function Payments(props) {
   const [payments, setPayments] = useState([]);
   const [members, setMembers] = useState([]);
   const [countActive, setCountActive] = useState(0);
   const [countInactive, setCountInactive] = useState(0);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
   let match = useRouteMatch();
 
   useEffect(() => {
@@ -53,6 +55,36 @@ export default function Payments(props) {
         console.log(e);
       });
   };
+
+  const [selectedPaymentId, setSelectedPaymentId] = React.useState();
+
+  function deletePayment(e) {
+    e.preventDefault();
+    PaymentsDataService.delete(selectedPaymentId)
+      .then(response => {
+        retrievePayments();
+      })
+      .catch(e => {
+        console.log(e);
+      });
+    closeModal();
+  };
+
+  function openModal(id) {
+    setSelectedPaymentId(id)
+    setModalIsOpen(true)
+  }
+
+  function closeModal() {
+    setSelectedPaymentId(null)
+    setModalIsOpen(false);
+  }
+
+  function DeleteModal() {
+    return (
+      <ModalContainer modalIsOpen={modalIsOpen} onClose={closeModal} onAction={deletePayment} title="Eliminar Abono" actionLabel="Eliminar"></ModalContainer>
+    );
+  }
 
   class CircleCounter extends React.Component {
     render() {
@@ -100,7 +132,7 @@ export default function Payments(props) {
   }
 
   return (
-    <div>
+    <div id="main">
       <div className="row">
         <div className="col-lg-12 pb-4" style={{ textAlign: "right" }}>
           <Link to={{
@@ -121,6 +153,7 @@ export default function Payments(props) {
           <thead>
             <tr>
               <th>Id Socio</th>
+              <th>Email</th>
               <th>Tipo</th>
               <th>Monto</th>
               <th>Fecha Inicio</th>
@@ -132,10 +165,12 @@ export default function Payments(props) {
               return (
                 <tr key={paymentItem.memberId}>
                   <td>{paymentItem.memberId}</td>
+                  <td>{paymentItem.memberEmail}</td>
                   <td>{paymentItem.type}</td>
                   <td>$ {paymentItem.price}</td>
                   <td>{new Date(paymentItem.start).toLocaleDateString()}</td>
                   <td>{new Date(paymentItem.end).toLocaleDateString()}</td>
+                  <td><button onClick={(e) => openModal(paymentItem._id, e)} className="btn btn-danger col-lg-5 mx-1 mb-1">X</button></td>
                 </tr>
               );
             })}
@@ -154,6 +189,9 @@ export default function Payments(props) {
             </div>
           </div> */}
         </table>
+
+        <button onClick={openModal}>Open Modal</button>
+        <DeleteModal/>
       </div>
     </div>
   );

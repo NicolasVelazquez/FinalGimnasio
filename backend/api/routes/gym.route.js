@@ -33,7 +33,10 @@ router
     .get(PaymentController.find)
     .post(PaymentController.create)
 
-router.route("/abonos/:id").get(PaymentController.find)
+router
+    .route("/abonos/:id")
+    .get(PaymentController.find)
+    .delete(PaymentController.delete)
 
 router
     .route("/socios")

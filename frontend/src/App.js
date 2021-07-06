@@ -19,7 +19,7 @@ function App() {
   // }
 
   return (
-    <div className="App">
+    <div id="main" className="App">
       <nav className="navbar navbar-expand navbar-dark bg-dark">
         <a href="/gimnasio" className="navbar-brand">
           Gimnasio App

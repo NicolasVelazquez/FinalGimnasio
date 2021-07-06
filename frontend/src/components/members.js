@@ -54,10 +54,6 @@ export default function Members(props) {
     setIsOpen(true);
   }
 
-  function afterOpenModal() {
-
-  }
-
   function closeModal() {
     setSelectedMemberId(null)
     setIsOpen(false);
@@ -117,7 +113,6 @@ export default function Members(props) {
       </div>
       <Modal
         isOpen={modalIsOpen}
-        onAfterOpen={afterOpenModal}
         onRequestClose={closeModal}
         style={customStyles}
         contentLabel="Example Modal"
