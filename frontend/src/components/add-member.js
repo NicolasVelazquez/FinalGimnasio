@@ -144,7 +144,7 @@ const AddMember = props => {
                 />
               </div>
             </div>
-            <button type="submit" className="btn btn-success mx-1 mb-1">Enviar</button>
+            <button type="submit" className="btn btn-success mx-1 mb-1">Guardar</button>
             <Link to={"/socios"} className="btn btn-primary mx-1 mb-1">Atrás</Link>
           </div>
         </form>

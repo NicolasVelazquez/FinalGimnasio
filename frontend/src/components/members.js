@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from "react"
 import MembersDataService from "../services/member.service"
 import { Link, useRouteMatch } from "react-router-dom";
+import Accordion from 'react-bootstrap/Accordion';
+import Card from 'react-bootstrap/Card';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+
 import Modal from 'react-modal';
 
 const customStyles = {
@@ -62,54 +67,129 @@ export default function Members(props) {
   return (
     <div>
       <div className="row">
-        <div className="col-lg-12 pb-4"  style={{textAlign: "right"}}>
+        <div className="col-lg-12 pb-4" style={{ textAlign: "right" }}>
           <Link to={`${match.url}/crear`} className="btn btn-primary col-lg-4">
             Alta Socio
           </Link>
         </div>
       </div>
-      <div className="row">
-        {members.map((memberItem, index) => {
-          return (
-            <div className="col-lg-4 pb-1">
-              <div className="card">
-                <div className="card-body">
-                  <h5 className="card-title">{memberItem.name} {memberItem.lastName} {(memberItem.active) ? '(ACTIVO)' : '(INACTIVO)'}</h5>
-                  <div className="card-text">
-                    <strong>Email: </strong>{memberItem.email}<br />
-                    <strong>Fecha de Nacimiento: </strong>{new Date(memberItem.birthday).toLocaleDateString()}<br />
-                    <strong>Socio desde: </strong>{new Date(memberItem.createdAt).toLocaleDateString()}<br />
-                    <strong>Género: </strong>{memberItem.genre ? memberItem.genre : '-'}<br />
-                    <strong>Teléfono: </strong>{memberItem.phonenumber ? memberItem.phonenumber : '-'}<br />
-                    {(memberItem.activePayment) &&
-                      <div>
-                        <strong>Vencimiento del abono: </strong> {new Date(memberItem.activePayment.end).toLocaleDateString()}
-                      </div>
-                    }
-                    <strong>Clases inscripto: </strong>
-                    {(memberItem.classesEnrolled.length && memberItem.classesEnrolled.length > 0) ?
-                      <ul>
-                        {memberItem.classesEnrolled.map((item, indexClass) => (
-                          <li key={indexClass}>{item}</li>
-                        ))}
-                      </ul> : <p>Aún no se ha inscripto a una clase.</p>}
-                  </div>
-                  <div className="row">
-                    <Link to={{
-                      pathname: match.url + "/" + memberItem._id + "/editar",
-                      state: {
-                        currentMember: memberItem
-                      }
-                    }} className="btn btn-primary col-lg-5 mx-1 mb-1">
-                      Editar
-                    </Link>
-                    <button onClick={(e) => openModal(memberItem._id, e)} className="btn btn-danger col-lg-5 mx-1 mb-1">Eliminar</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          );
-        })}
+      <div >
+        <h2>Registro de Socios</h2>
+        <Accordion defaultActiveKey="0">
+          <Card>
+            <Accordion.Toggle as={Card.Header}>
+              <Card.Subtitle>
+                <Row>
+                  <Col>Nombre y Apellido</Col>
+                  <Col>Email</Col>
+                  <Col>Estado</Col>
+                  <Col md="auto">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-contract" viewBox="0 0 16 16">
+                      <path fill-rule="evenodd" d="M3.646 13.854a.5.5 0 0 0 .708 0L8 10.207l3.646 3.647a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 0 0 0 .708zm0-11.708a.5.5 0 0 1 .708 0L8 5.793l3.646-3.647a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 0-.708z" />
+                    </svg>
+                  </Col>
+                </Row>
+              </Card.Subtitle>
+            </Accordion.Toggle>
+          </Card>
+          {members.map((memberItem, index) => {
+            return (
+              <Card>
+                <Accordion.Toggle as={Card.Header} eventKey={memberItem._id}>
+                  <Row>
+                    <Col><strong>{memberItem.name} {memberItem.lastName}</strong></Col>
+                    <Col> {memberItem.email}</Col>
+                    <Col>{(memberItem.active) ? 'ACTIVO' : 'INACTIVO'}</Col>
+                    <Col md="auto">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z" />
+                      </svg>
+                    </Col>
+                  </Row>
+                </Accordion.Toggle>
+                <Accordion.Collapse eventKey={memberItem._id}>
+                  <Card.Body>
+                    <div className="card-text">
+                      <Row>
+                        <Col>
+                          <strong>Fecha de Nacimiento: </strong>{new Date(memberItem.birthday).toLocaleDateString()}<br />
+                          <strong>Socio desde: </strong>{new Date(memberItem.createdAt).toLocaleDateString()}<br />
+                          <strong>Género: </strong>{memberItem.genre ? memberItem.genre : '-'}<br />
+                        </Col>
+                        <Col>
+                          <strong>Teléfono: </strong>{memberItem.phonenumber ? memberItem.phonenumber : '-'}<br />
+                          {(memberItem.activePayment) &&
+                            <div>
+                              <strong>Vencimiento del abono: </strong> {new Date(memberItem.activePayment.end).toLocaleDateString()}
+                            </div>}
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col>
+                          <strong>Clases inscripto: </strong>
+                          {(memberItem.classesEnrolled.length && memberItem.classesEnrolled.length > 0) ?
+                            <ul>
+                              {memberItem.classesEnrolled.map((item, indexClass) => (
+                                <li key={indexClass}>{item}</li>
+                              ))}
+                            </ul> : <p>Aún no se ha inscripto a una clase.</p>}
+                        </Col>
+                      </Row>
+                    </div>
+                    <div className="row">
+                      <Link to={{
+                        pathname: match.url + "/" + memberItem._id + "/editar",
+                        state: {
+                          currentMember: memberItem
+                        }
+                      }} className="btn btn-primary col-lg-5 mx-1 mb-1">
+                        Editar
+                      </Link>
+                      <button onClick={(e) => openModal(memberItem._id, e)} className="btn btn-danger col-lg-5 mx-1 mb-1">Eliminar</button>
+                    </div>
+                  </Card.Body>
+                </Accordion.Collapse>
+              </Card>
+              // <div className="col-lg-4 pb-1">
+              //   <div className="card">
+              //     <div className="card-body">
+              //       <h5 className="card-title">{memberItem.name} {memberItem.lastName} {(memberItem.active) ? '(ACTIVO)' : '(INACTIVO)'}</h5>
+              //       <div className="card-text">
+              //         <strong>Email: </strong>{memberItem.email}<br />
+              //         <strong>Fecha de Nacimiento: </strong>{new Date(memberItem.birthday).toLocaleDateString()}<br />
+              //         <strong>Socio desde: </strong>{new Date(memberItem.createdAt).toLocaleDateString()}<br />
+              //         <strong>Género: </strong>{memberItem.genre ? memberItem.genre : '-'}<br />
+              //         <strong>Teléfono: </strong>{memberItem.phonenumber ? memberItem.phonenumber : '-'}<br />
+              //         {(memberItem.activePayment) &&
+              //           <div>
+              //             <strong>Vencimiento del abono: </strong> {new Date(memberItem.activePayment.end).toLocaleDateString()}
+              //           </div>
+              //         }
+              //         <strong>Clases inscripto: </strong>
+              //         {(memberItem.classesEnrolled.length && memberItem.classesEnrolled.length > 0) ?
+              //           <ul>
+              //             {memberItem.classesEnrolled.map((item, indexClass) => (
+              //               <li key={indexClass}>{item}</li>
+              //             ))}
+              //           </ul> : <p>Aún no se ha inscripto a una clase.</p>}
+              //       </div>
+              //       <div className="row">
+              //         <Link to={{
+              //           pathname: match.url + "/" + memberItem._id + "/editar",
+              //           state: {
+              //             currentMember: memberItem
+              //           }
+              //         }} className="btn btn-primary col-lg-5 mx-1 mb-1">
+              //           Editar
+              //         </Link>
+              //         <button onClick={(e) => openModal(memberItem._id, e)} className="btn btn-danger col-lg-5 mx-1 mb-1">Eliminar</button>
+              //       </div>
+              //     </div>
+              //   </div>
+              // </div>
+            );
+          })}
+        </Accordion>
       </div>
       <Modal
         isOpen={modalIsOpen}
@@ -136,6 +216,5 @@ export default function Members(props) {
     </div>
 
   );
-}
 
-// export default Members;
+}

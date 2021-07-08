@@ -38,7 +38,7 @@ function ModalContainer(props) {
             <h5 className="modal-title">{props.title}</h5>
           </div>
           <div>
-            <button onClick={props.onClose} className="btn btn-secondary mx-1 mb-1">Cancelar</button>
+            <button onClick={props.onClose} className="btn btn-primary mx-1 mb-1">Cancelar</button>
             <button onClick={props.onAction} className="btn btn-danger mx-1 mb-1">{props.actionLabel}</button>
           </div>
         </div>

@@ -15,36 +15,39 @@ export default function Payments(props) {
 
   useEffect(() => {
     retrieveMembers();
-    retrievePayments();
+    // retrievePayments();
   }, []);
 
   useEffect(() => {
     let countActive = 0;
     let countInactive = 0;
+    let activePatmentsList = [];
 
     members.forEach(element => {
       if (element.active) {
+        activePatmentsList.push(element.activePayment);
         countActive++;
       } else {
         countInactive++;
       }
     });
 
+    setPayments(activePatmentsList)
     setCountActive(countActive)
     setCountInactive(countInactive)
 
   }, [members]);
 
-  const retrievePayments = () => {
-    PaymentsDataService.getAll()
-      .then(response => {
-        console.log(response.data)
-        setPayments(response.data);
-      })
-      .catch(e => {
-        console.log(e);
-      });
-  };
+  // const retrievePayments = () => {
+  //   PaymentsDataService.getAll()
+  //     .then(response => {
+  //       console.log(response.data)
+  //       setPayments(response.data);
+  //     })
+  //     .catch(e => {
+  //       console.log(e);
+  //     });
+  // };
 
   const retrieveMembers = () => {
     MembersDataService.getAll()
@@ -62,7 +65,7 @@ export default function Payments(props) {
     e.preventDefault();
     PaymentsDataService.delete(selectedPaymentId)
       .then(response => {
-        retrievePayments();
+        retrieveMembers();
       })
       .catch(e => {
         console.log(e);
@@ -170,7 +173,14 @@ export default function Payments(props) {
                   <td>$ {paymentItem.price}</td>
                   <td>{new Date(paymentItem.start).toLocaleDateString()}</td>
                   <td>{new Date(paymentItem.end).toLocaleDateString()}</td>
-                  <td><button onClick={(e) => openModal(paymentItem._id, e)} className="btn btn-danger col-lg-5 mx-1 mb-1">X</button></td>
+                  <td>
+                    <button onClick={(e) => openModal(paymentItem._id, e)} className="btn btn-danger">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
+                        <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
+                      </svg>
+                    </button>
+                  </td>
                 </tr>
               );
             })}
@@ -189,9 +199,7 @@ export default function Payments(props) {
             </div>
           </div> */}
         </table>
-
-        <button onClick={openModal}>Open Modal</button>
-        <DeleteModal/>
+        <DeleteModal />
       </div>
     </div>
   );
