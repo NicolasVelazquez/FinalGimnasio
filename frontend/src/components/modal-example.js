@@ -24,7 +24,7 @@ function ModalContainer(props) {
         onAfterOpen={afterOpenModal}
         onRequestClose={props.onClose}
         style={customStyles}
-        contentLabel="Example Modal"
+        contentLabel="Base Modal"
         ariaHideApp={false}
       >
         <div>

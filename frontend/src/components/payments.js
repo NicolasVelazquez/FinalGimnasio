@@ -15,7 +15,6 @@ export default function Payments(props) {
 
   useEffect(() => {
     retrieveMembers();
-    // retrievePayments();
   }, []);
 
   useEffect(() => {
@@ -37,17 +36,6 @@ export default function Payments(props) {
     setCountInactive(countInactive)
 
   }, [members]);
-
-  // const retrievePayments = () => {
-  //   PaymentsDataService.getAll()
-  //     .then(response => {
-  //       console.log(response.data)
-  //       setPayments(response.data);
-  //     })
-  //     .catch(e => {
-  //       console.log(e);
-  //     });
-  // };
 
   const retrieveMembers = () => {
     MembersDataService.getAll()
@@ -185,19 +173,6 @@ export default function Payments(props) {
               );
             })}
           </tbody>
-          {/* <div className="col-lg-4 pb-1">
-            <div className="card">
-              <div className="card-body">
-                <div className="card-text">
-                  <strong>Id Socio: </strong>{paymentItem.memberId}<br />
-                  <strong>Tipo: </strong>{paymentItem.type}<br />
-                  <strong>Monto: </strong>{paymentItem.price}<br />
-                  <strong>Fecha de Inicio: </strong>{new Date(paymentItem.start).toLocaleDateString()}<br />
-                  <strong>Fecha de Fin: </strong>{new Date(paymentItem.end).toLocaleDateString()}<br />
-                </div>
-              </div>
-            </div>
-          </div> */}
         </table>
         <DeleteModal />
       </div>

@@ -22,6 +22,14 @@ class ClassDataService {
         return http.delete(`/clases/${id}`);
     }
     
-}
+    enroll(data) {
+        return http.post(`/clases/inscripcion`, data);
+    }
     
+    dropOut(data) {
+        return http.post(`/clases/baja`, data);
+    }
+
+}
+
 export default new ClassDataService();

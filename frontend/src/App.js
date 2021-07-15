@@ -6,6 +6,8 @@ import Members from "./components/members"
 import AddMember from "./components/add-member"
 import Payments from "./components/payments"
 import AddPayments from "./components/add-payment"
+import Classes from "./components/classes"
+import AddClasses from "./components/add-class"
 
 function App() {
   // const [user, setUser] = React.useState(null);
@@ -50,6 +52,9 @@ function App() {
           <Route exact path={["/socios"]} component={Members} />
           <Route exact path={["/abonos/crear"]} render={(props) => (<AddPayments {...props} />)} />
           <Route exact path={["/abonos"]} component={Payments} />
+          <Route path="/clases/:id/editar" render={(props) => (<AddClasses {...props} />)}/>
+          <Route exact path={["/clases"]} component={Classes} />
+          <Route exact path={["/clases/crear"]} render={(props) => (<AddClasses {...props} />)} />
         </Switch>
       </div>
     </div>
