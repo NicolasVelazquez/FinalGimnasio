@@ -1,50 +1,83 @@
 import React, { useState } from "react";
 import ClassDataService from "../services/class.service";
 import { Link } from "react-router-dom";
+import Form from 'react-bootstrap/Form'
 
 const AddClass = props => {
   let initialClassState = ""
   let editing = false;
+  let scheduleDays = []
+  let scheduleHours = []
+  const days = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado']
+  const hours = ['08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00']
 
   if (props.location.state && props.location.state.currentClass) {
     editing = true;
     initialClassState = props.location.state.currentClass
   }
 
-  // const [member] = useState(initialClassState);
   const [submitted, setSubmitted] = useState(false);
 
   const [name, setName] = useState(initialClassState.name)
-  const [schedule, setSchedule] = useState(initialClassState.schedule)
+
+  const setDays = (day) => {
+    if (day.checked) {
+      scheduleDays.push(day.name)
+    } else {
+      scheduleDays = scheduleDays.filter(item => item !== day.name)
+    }
+    console.log(scheduleDays)
+  }
+
+  const setHours = (hour) => {
+    if (hour.checked) {
+      scheduleHours.push(hour.name)
+    } else {
+      scheduleHours = scheduleHours.filter(item => item !== hour.name)
+    }
+    console.log(scheduleHours)
+  }
+
+  function compareDays ( a, b ){ return days.indexOf(a) - days.indexOf(b); }
+  function compareHours ( a, b ){ return hours.indexOf(a) - hours.indexOf(b); }
 
   const saveClass = (e) => {
     e.preventDefault()
 
-    var data = {
-      name: name,
-      schedule: schedule
-    };
-
-    if (editing) {
-      console.log(initialClassState)
-      data._id = props.location.state.currentClass._id
-      ClassDataService.updateClass(data)
-        .then(response => {
-          setSubmitted(true);
-          console.log(response.data);
-        })
-        .catch(e => {
-          console.log(e);
-        });
+    if(scheduleDays.length < 1 || scheduleHours.length < 1){
+      alert("Debe seleccionar al menos un día y un horario.")
     } else {
-      ClassDataService.createClass(data)
-        .then(response => {
-          setSubmitted(true);
-          console.log(response.data);
+      scheduleDays.sort(compareDays);
+      scheduleHours.sort(compareHours);
+  
+      var data = {
+        name: name,
+        schedule: scheduleDays.map(function (x) {
+          return x + ': ' + scheduleHours.join(', ');
         })
-        .catch(e => {
-          console.log(e);
-        });
+      };
+  
+      if (editing) {
+        console.log(initialClassState)
+        data._id = props.location.state.currentClass._id
+        ClassDataService.updateClass(data)
+          .then(response => {
+            setSubmitted(true);
+            console.log(response.data);
+          })
+          .catch(e => {
+            console.log(e);
+          });
+      } else {
+        ClassDataService.createClass(data)
+          .then(response => {
+            setSubmitted(true);
+            console.log(response.data);
+          })
+          .catch(e => {
+            console.log(e);
+          });
+      }
     }
   };
 
@@ -68,7 +101,7 @@ const AddClass = props => {
           <div className="card-body">
             <div className="form-group">
               <h2 htmlFor="description">{editing ? "Editar" : "Crear"} Clase</h2>
-              <div class="form-group">
+              <div className="form-group">
                 <label for="inputEmail4">Nombre</label>
                 <input
                   type="text"
@@ -77,20 +110,33 @@ const AddClass = props => {
                   defaultValue={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder='Nombre'
-                  maxlength="20"
                 />
               </div>
-              <div class="form-group">
-                <label>Días y Horarios</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  required
-                  defaultValue={schedule}
-                  onChange={(e) => setSchedule(e.target.value)}
-                  placeholder='Días y Horarios'
-                  maxlength="20"
-                />
+              <label>Días</label>
+              <div className="mb-3">
+                {days.map((day) => (
+                  <Form.Check
+                    inline
+                    label={day}
+                    name={day}
+                    type="checkbox"
+                    id={`inline-${day}-1`}
+                    onChange={(e) => setDays(e.target)}
+                  />
+                ))}
+              </div>
+              <label>Horarios</label>
+              <div className="mb-3">
+                {hours.map((hour) => (
+                  <Form.Check
+                    inline
+                    label={hour}
+                    name={hour}
+                    type="checkbox"
+                    id={`inline-${hour}-1`}
+                    onChange={(e) => setHours(e.target)}
+                  />
+                ))}
               </div>
             </div>
             <button type="submit" className="btn btn-success mx-1 mb-1">Guardar</button>
