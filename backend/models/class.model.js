@@ -4,7 +4,8 @@ const Schema = mongoose.Schema;
 
 const classSchema = new Schema({
   name: { type: String, required: true },
-  schedule: { type: [String], required: true }
+  scheduleDays: { type: [String], required: true },
+  scheduleHours: { type: [String], required: true }
 }, {
   collection: 'classes'
 });

@@ -1,30 +1,58 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ClassDataService from "../services/class.service";
 import { Link } from "react-router-dom";
 import Form from 'react-bootstrap/Form'
 
 const AddClass = props => {
-  let initialClassState = ""
-  let editing = false;
-  let scheduleDays = []
-  let scheduleHours = []
+  // let initialClassState = ""
+  // let editing = false
+  // let scheduleDays = []
+  // let scheduleHours = []
   const days = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado']
   const hours = ['08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00']
-
-  if (props.location.state && props.location.state.currentClass) {
-    editing = true;
-    initialClassState = props.location.state.currentClass
-  }
-
-  const [submitted, setSubmitted] = useState(false);
-
+  const [submitted, setSubmitted] = useState(false)
+  const [editing, setEditing] = useState(false)
+  const [initialClassState, setInitialClassState] = useState("")
   const [name, setName] = useState(initialClassState.name)
+  const [scheduleDays, setScheduleDays] = useState(initialClassState.scheduleDays)
+  const [scheduleHours, setScheduleHours] = useState(initialClassState.scheduleHours)
+
+  useEffect(() => {
+    if (props.location.state && props.location.state.currentClass) {
+      setEditing(true)
+      setInitialClassState(props.location.state.currentClass)
+    }
+  }, [props.location.state])
+
+  useEffect(() => {
+    if (initialClassState) {
+
+      setName(initialClassState.name)
+      setScheduleDays(initialClassState.scheduleDays)
+      setScheduleHours(initialClassState.scheduleHours)
+
+      initialClassState.scheduleDays.forEach(item => {
+        let elementId = `checkbox-${item}-id`
+        let element = document.getElementById(elementId)
+        if (element) {
+          element.checked = true
+        }
+      });
+      initialClassState.scheduleHours.forEach(item => {
+        let elementId = `checkbox-${item}-id`
+        let element = document.getElementById(elementId)
+        if (element) {
+          element.checked = true
+        }
+      });
+    }
+  }, [props.location.state, initialClassState]);
 
   const setDays = (day) => {
     if (day.checked) {
       scheduleDays.push(day.name)
     } else {
-      scheduleDays = scheduleDays.filter(item => item !== day.name)
+      setScheduleDays(scheduleDays.filter(item => item !== day.name))
     }
     console.log(scheduleDays)
   }
@@ -33,34 +61,33 @@ const AddClass = props => {
     if (hour.checked) {
       scheduleHours.push(hour.name)
     } else {
-      scheduleHours = scheduleHours.filter(item => item !== hour.name)
+      setScheduleHours(scheduleHours.filter(item => item !== hour.name))
     }
     console.log(scheduleHours)
   }
 
-  function compareDays ( a, b ){ return days.indexOf(a) - days.indexOf(b); }
-  function compareHours ( a, b ){ return hours.indexOf(a) - hours.indexOf(b); }
+  function compareDays(a, b) { return days.indexOf(a) - days.indexOf(b); }
+  function compareHours(a, b) { return hours.indexOf(a) - hours.indexOf(b); }
 
   const saveClass = (e) => {
     e.preventDefault()
 
-    if(scheduleDays.length < 1 || scheduleHours.length < 1){
+    if (scheduleDays.length < 1 || scheduleHours.length < 1) {
       alert("Debe seleccionar al menos un día y un horario.")
     } else {
       scheduleDays.sort(compareDays);
       scheduleHours.sort(compareHours);
-  
+
       var data = {
         name: name,
-        schedule: scheduleDays.map(function (x) {
-          return x + ': ' + scheduleHours.join(', ');
-        })
-      };
-  
+        scheduleDays: scheduleDays,
+        scheduleHours: scheduleHours
+      }
+
       if (editing) {
         console.log(initialClassState)
-        data._id = props.location.state.currentClass._id
-        ClassDataService.updateClass(data)
+        data._id = initialClassState._id
+        ClassDataService.updateClass(initialClassState._id, data)
           .then(response => {
             setSubmitted(true);
             console.log(response.data);
@@ -120,7 +147,7 @@ const AddClass = props => {
                     label={day}
                     name={day}
                     type="checkbox"
-                    id={`inline-${day}-1`}
+                    id={`checkbox-${day}-id`}
                     onChange={(e) => setDays(e.target)}
                   />
                 ))}
@@ -133,7 +160,7 @@ const AddClass = props => {
                     label={hour}
                     name={hour}
                     type="checkbox"
-                    id={`inline-${hour}-1`}
+                    id={`checkbox-${hour}-id`}
                     onChange={(e) => setHours(e.target)}
                   />
                 ))}
