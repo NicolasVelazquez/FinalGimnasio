@@ -11,22 +11,8 @@ import Classes from "./components/classes"
 import AddClasses from "./components/add-class"
 
 function App() {
-  // const [user, setUser] = React.useState(null);
-
-  // async function login(user = null) {
-  //   setUser(user);
-  // }
-
-  // async function logout() {
-  //   setUser(null)
-  // }
-
-  const TodoComponent = {
-    // backgroundColor: "#444b58"
-   }
-
   return (
-    <div id="main" className="App" style={TodoComponent}>
+    <div id="main" className="App" >
       <nav className="navbar navbar-expand navbar-dark bg-dark">
         <a href="/gimnasio" className="navbar-brand">
           Gimnasio App
