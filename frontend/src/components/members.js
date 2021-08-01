@@ -5,6 +5,11 @@ import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
+import Button from 'react-bootstrap/Button';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Tooltip from 'react-bootstrap/Tooltip';
+
+import ClassesDataService from "../services/class.service"
 import MembersDataService from "../services/member.service"
 import ModalContainer from "./modal-example"
 
@@ -58,6 +63,25 @@ export default function Members(props) {
     );
   }
 
+  function dropOut(className, member, indexClass) {
+    let elementId = member.name+className.replaceAll(' ', '')+indexClass
+    console.log(elementId)
+    
+    var data = {
+      "email": member.email,
+      "className": className
+    };
+
+    ClassesDataService.dropOut(data)
+      .then(response => {
+        console.log(document.getElementById(elementId))
+        document.getElementById(elementId).remove()
+      })
+      .catch(e => {
+        console.log(e);
+      });
+  };
+
   return (
     <div>
       <div className="row">
@@ -78,7 +102,7 @@ export default function Members(props) {
                   <Col>Email</Col>
                   <Col>Estado</Col>
                   <Col md="auto">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-contract" viewBox="0 0 16 16">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-chevron-contract" viewBox="0 0 16 16">
                       <path fill-rule="evenodd" d="M3.646 13.854a.5.5 0 0 0 .708 0L8 10.207l3.646 3.647a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 0 0 0 .708zm0-11.708a.5.5 0 0 1 .708 0L8 5.793l3.646-3.647a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 0-.708z" />
                     </svg>
                   </Col>
@@ -95,7 +119,7 @@ export default function Members(props) {
                     <Col> {memberItem.email}</Col>
                     <Col>{(memberItem.active) ? 'ACTIVO' : 'INACTIVO'}</Col>
                     <Col md="auto">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-chevron-down" viewBox="0 0 16 16">
                         <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z" />
                       </svg>
                     </Col>
@@ -123,7 +147,22 @@ export default function Members(props) {
                         {(memberItem.classesEnrolled.length && memberItem.classesEnrolled.length > 0) ?
                           <ul>
                             {memberItem.classesEnrolled.map((item, indexClass) => (
-                              <li key={indexClass}>{item}</li>
+                              <li key={indexClass} id={memberItem.name+item.replaceAll(' ', '')+indexClass}>
+                                {item}
+                                <OverlayTrigger
+                                  placement="top"
+                                  overlay={
+                                    <Tooltip id={`tooltip-delete`}>
+                                      Salir de clase
+                                    </Tooltip>
+                                  }>
+                                  <Button onClick={(e) => dropOut(item, memberItem, indexClass)} variant="link">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-x-circle-fill" viewBox="0 0 16 16">
+                                      <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"></path>
+                                    </svg>
+                                  </Button>
+                                </OverlayTrigger>
+                              </li>
                             ))}
                           </ul> : <p>Aún no se ha inscripto a una clase.</p>}
                       </Col>

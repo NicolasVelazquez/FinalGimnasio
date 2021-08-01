@@ -2,6 +2,7 @@ import React from "react";
 import { Switch, Route, Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 
+import Home from "./components/home.js"
 import Members from "./components/members"
 import AddMember from "./components/add-member"
 import Payments from "./components/payments"
@@ -20,8 +21,12 @@ function App() {
   //   setUser(null)
   // }
 
+  const TodoComponent = {
+    // backgroundColor: "#444b58"
+   }
+
   return (
-    <div id="main" className="App">
+    <div id="main" className="App" style={TodoComponent}>
       <nav className="navbar navbar-expand navbar-dark bg-dark">
         <a href="/gimnasio" className="navbar-brand">
           Gimnasio App
@@ -47,6 +52,8 @@ function App() {
 
       <div className="container mt-3">
         <Switch>
+          <Route exact path={["/"]} component={Home} />
+          <Route exact path={["/gimnasio"]} component={Home} />
           <Route path="/socios/:id/editar" render={(props) => (<AddMember {...props} />)}/>
           <Route exact path={["/socios/crear"]} component={AddMember} />
           <Route exact path={["/socios"]} component={Members} />

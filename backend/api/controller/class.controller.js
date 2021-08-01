@@ -114,14 +114,14 @@ export default class ClassController {
 
   static async delete(req, res) {
     try {
-      // const result = await ClassMongo.findByIdAndDelete(req.params.id)
-      const result = await ClassMongo.findById(req.params.id).lean()
-      if (!result) {
+      const classResult = await ClassMongo.findById(req.params.id).lean()
+      if (!classResult) {
         res.status(404).json('Error: Clase no encontrada.')
         return
       }
-      const member = await MemberMongo.find({ classesEnrolled: result.name })
-      res.json(member)
+      const result = await ClassMongo.findByIdAndDelete(req.params.id)
+      res.json(result)
+      // const member = await MemberMongo.find({ classesEnrolled: result.name })
     } catch (error) {
       console.log(error.message);
       if (error instanceof mongoose.CastError) {
