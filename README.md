@@ -2,6 +2,8 @@
 
 Se compone de un módulo de backend y uno de frontend. Los mismos se encuentran en dos directorios separados con su nombre correspondiente
 
+No se utilizan datos locales, la base de datos está alojada en Mongodb Cloud Atlas.
+
 ## Levantar el backend:
 
 Moverse al directorio ./backend y ejecutar
