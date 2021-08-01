@@ -1,9 +1,16 @@
 import moment from "moment"
 import mongoose from "mongoose"
+import winston from "winston"
 import MemberMongo from "../../models/member.model.js"
 import PaymentMongo from "../../models/payment.model.js"
 import PlanMongo from "../../models/plan.model.js"
 import CommonsUtil from "../../utils/common.utils.js"
+
+const logger = winston.createLogger({
+  transports: [
+    new winston.transports.File({ filename: 'app.log' })
+  ]
+});
 
 export default class PaymentController {
 
@@ -57,7 +64,7 @@ export default class PaymentController {
         }
 
       } catch (error) {
-        console.log(error.message);
+        logger.error(error.message)
         if (error instanceof mongoose.CastError) {
           res.status(400).json('Error: Id de socio inválido.')
         }
@@ -87,7 +94,7 @@ export default class PaymentController {
           .catch(err => res.status(500).json('Error: ' + err))
       }
     } catch (error) {
-      console.log(error.message);
+      logger.error(error.message)
       if (error instanceof mongoose.CastError) {
         res.status(400).json('Error: Id de abono inválido.')
       }

@@ -1,5 +1,12 @@
 import PlanMongo from "../../models/plan.model.js"
 import mongoose from "mongoose"
+import winston from "winston"
+
+const logger = winston.createLogger({
+  transports: [
+    new winston.transports.File({ filename: 'app.log' })
+  ]
+});
 
 export default class PlanController {
 
@@ -25,7 +32,7 @@ export default class PlanController {
         }
         res.json('Plan actualizado!')
       } catch (error) {
-        console.log(error.message);
+        logger.error(error.message)
         if (error instanceof mongoose.CastError) {
           res.status(400).json('Error: Id de plan inválido.')
         }
@@ -40,7 +47,7 @@ export default class PlanController {
         }
         res.json('Plan borrado.')
       } catch (error) {
-        console.log(error.message);
+        logger.error(error.message)
         if (error instanceof mongoose.CastError) {
           res.status(400).json('Error: Id de plan inválido.')
         }

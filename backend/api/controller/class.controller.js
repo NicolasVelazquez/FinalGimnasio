@@ -1,6 +1,13 @@
 import ClassMongo from "../../models/class.model.js"
 import MemberMongo from "../../models/member.model.js"
 import mongoose from "mongoose"
+import winston from "winston"
+
+const logger = winston.createLogger({
+  transports: [
+    new winston.transports.File({ filename: 'app.log' })
+  ]
+});
 
 export default class ClassController {
 
@@ -99,13 +106,12 @@ export default class ClassController {
   static async update(req, res) {
     try {
       const result = await ClassMongo.findByIdAndUpdate(req.params.id, req.body, { new: true })
-      // const classEntity = await ClassMongo.findById(req.params.id);
       if (!result) {
         res.status(404).json('Error: Clase no encontrada.')
       }
       res.json('Clase actualizada!')
     } catch (error) {
-      console.log(error.message);
+      logger.error(error.message)
       if (error instanceof mongoose.CastError) {
         res.status(400).json('Error: Id de clase inválida.')
       }
@@ -123,7 +129,7 @@ export default class ClassController {
       res.json(result)
       // const member = await MemberMongo.find({ classesEnrolled: result.name })
     } catch (error) {
-      console.log(error.message);
+      logger.error(error.message)
       if (error instanceof mongoose.CastError) {
         res.status(400).json('Error: Id de clase inválida.')
       }

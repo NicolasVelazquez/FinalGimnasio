@@ -1,6 +1,13 @@
 import MemberMongo from "../../models/member.model.js"
 import Utils from "../../utils/members.util.js"
 import mongoose from "mongoose"
+import winston from "winston"
+
+const logger = winston.createLogger({
+  transports: [
+    new winston.transports.File({ filename: 'app.log' })
+  ]
+});
 
 export default class MembersController {
 
@@ -25,7 +32,7 @@ export default class MembersController {
         }
         
       } catch (error) {
-        console.log(error.message);
+        logger.error(error.message)
         if (error instanceof mongoose.CastError) {
           res.status(400).json('Error: Id de socio inválido.')
         }
@@ -53,7 +60,7 @@ export default class MembersController {
             .catch(err => res.status(500).json('Error: ' + err))
         }
       } catch (error) {
-        console.log(error.message);
+        logger.error(error.message)
         if (error instanceof mongoose.CastError) {
           res.status(400).json('Error: Id de socio inválido.')
         }
@@ -71,7 +78,7 @@ export default class MembersController {
             .catch(err => res.status(500).json('Error: ' + err))
         }
       } catch (error) {
-        console.log(error.message);
+        logger.error(error.message)
         if (error instanceof mongoose.CastError) {
           res.status(400).json('Error: Id de socio inválido.')
         }
